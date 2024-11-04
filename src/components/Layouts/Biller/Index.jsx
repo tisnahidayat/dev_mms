@@ -1,19 +1,61 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import Header from "../Asset/Header";
 import Breadcumbs from "../Asset/Breadcumbs";
 import Search from "../../Elements/Search/Search";
 import Dropdown from "../../Elements/Search/Dropdown";
 import SidebarMobile from "../SidebarMobile";
+import { FaPlusCircle } from "react-icons/fa";
 
 const Index = () => {
-  const [selectedStatus, setSelectedStatus] = useState("Approved");
+  const [selectedStatus, setSelectedStatus] = useState("All");
   const location = useLocation();
-  const activeItem = location.pathname === "/" ? "Biller" : "Maintenance";
+  const [searchTerm, setSearchTerm] = useState("");
+  const activeItem = location.pathname === "/biller" ? "Biller" : "";
   const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef(null); // Sidebar reference
+
+  const data = [
+    {
+      no: 1,
+      appd: "APPD001",
+      billerName: "Universitas Ahmad Dahlan",
+      picName: "Customer Service",
+      status: "Proposed",
+      by: "Cabang Pembantu",
+    },
+    {
+      no: 2,
+      appd: "APPD002",
+      billerName: "PT Telekomunikasi Indonesia",
+      picName: "Support",
+      status: "Approved",
+      by: "Cabang Utama",
+    },
+    {
+      no: 3,
+      appd: "APPD003",
+      billerName: "Rumah Sakit Islam",
+      picName: "Teller",
+      status: "Completed",
+      by: "Cabang Utama",
+    },
+  ];
+
+  const filteredData = data.filter((item) => {
+    const matchesSearch =
+      item.appd.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.billerName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      selectedStatus === "All" || item.status === selectedStatus;
+    return matchesSearch && matchesStatus;
+  });
+
+  const handleSortStatus = (status) => {
+    setSelectedStatus(status);
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -70,21 +112,35 @@ const Index = () => {
       {/* Main Content */}
       <main className="flex-1 p-5 overflow-auto">
         {/* Show SidebarMobile toggle button only in mobile view */}
-        {isMobile && <SidebarMobile onClick={toggleSidebar} />}
+        {isMobile && (
+          <SidebarMobile onClick={toggleSidebar}>Biller</SidebarMobile>
+        )}
 
         {/* Header, Breadcrumbs, and Content */}
         <Header
           title="Biller"
           subTitle="View and manage all registered billers."
         />
-        <Breadcumbs title="Biller" text="List Biller" />
+        <Breadcumbs
+          items={[
+            { title: "List Biller", path: "/biller" },
+            { title: "Check Detail", path: "list-biller/check-detail" },
+          ]}
+        >
+          Biller
+        </Breadcumbs>
+
         <div className="flex flex-col gap-1 p-2 border-2 rounded-md border-[#00a78e] mb-3">
           <h1 className="text-lg font-semibold text-[#00a78e] mx-2">
             List Biller
           </h1>
           <div className="flex flex-col gap-1 p-3 mx-2 border-2 rounded-md border-[#00a78e] shadow-sm shadow-slate-400 bg-[#F3F3F3]">
             <div className="flex flex-col sm:flex-row gap-3 my-3 w-full">
-              <Search className="sm:w-[50%] w-full" />
+              <Search
+                className="sm:w-[50%] w-full"
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+              />
               <Dropdown
                 options={[
                   "Approved",
@@ -94,51 +150,76 @@ const Index = () => {
                   "Completed",
                 ]}
                 selectedValue={selectedStatus}
-                onSelect={(value) => setSelectedStatus(value)}
+                onSelect={handleSortStatus}
                 className="sm:w-[50%] w-full"
               />
               <button className="w-full sm:w-auto font-semibold text-sm text-white py-1 px-2 bg-[#00a78e] rounded-md ml-auto">
-                Create Biller
+                <Link
+                  to="/biller/create"
+                  className="flex items-center justify-center gap-2"
+                >
+                  Create Biller <FaPlusCircle />
+                </Link>
               </button>
             </div>
 
             {/* Table Content */}
             <div className="overflow-auto">
-              <table className="w-full text-sm text-left text-gray-500">
-                <thead className="text-xs text-white uppercase bg-[#00a78e] border-b border-gray-300">
-                  <tr>
-                    <th className="px-4 py-3">No</th>
-                    <th className="px-4 py-3">No APPD</th>
-                    <th className="px-4 py-3">Biller Name</th>
-                    <th className="px-4 py-3">PIC Name</th>
-                    <th className="px-4 py-3">Status</th>
-                    <th className="px-4 py-3">By</th>
-                    <th className="px-4 py-3">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {/* Sample Row Data */}
-                  <tr className="bg-white border-b hover:bg-gray-50">
-                    <td className="px-4 py-3">1</td>
-                    <td className="px-4 py-3">APPD001</td>
-                    <td className="px-4 py-3">Universitas Ahmad Dahlan</td>
-                    <td className="px-4 py-3">Customer Service</td>
-                    <td className="px-4 py-3">Proposed</td>
-                    <td className="px-4 py-3">Cabang Pembantu</td>
-                    <td className="px-4 py-3">Check Detail</td>
-                  </tr>
-                  <tr className="bg-white border-b hover:bg-gray-50">
-                    <td className="px-4 py-3">2</td>
-                    <td className="px-4 py-3">APPD002</td>
-                    <td className="px-4 py-3">PT Telekomunikasi Indonesia</td>
-                    <td className="px-4 py-3">Support</td>
-                    <td className="px-4 py-3">Approved</td>
-                    <td className="px-4 py-3">Cabang Utama</td>
-                    <td className="px-4 py-3">View Details</td>
-                  </tr>
-                  {/* Additional sample rows */}
-                </tbody>
-              </table>
+              {filteredData.length > 0 ? (
+                <table className="w-full text-sm text-left text-gray-500">
+                  <thead className="text-xs text-white uppercase bg-[#00a78e] border-b border-gray-300">
+                    <tr>
+                      <th className="px-4 py-3">No</th>
+                      <th className="px-4 py-3">No APPD</th>
+                      <th className="px-4 py-3">Biller Name</th>
+                      <th className="px-4 py-3">PIC Name</th>
+                      <th className="px-4 py-3">Status</th>
+                      <th className="px-4 py-3">By</th>
+                      <th className="px-4 py-3">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredData.map((item, index) => (
+                      <tr
+                        key={item.no}
+                        className="bg-white border-b hover:bg-gray-50"
+                      >
+                        <td className="px-4 py-3">{index + 1}</td>
+                        <td className="px-4 py-3">{item.appd}</td>
+                        <td className="px-4 py-3">{item.billerName}</td>
+                        <td className="px-4 py-3">{item.picName}</td>
+                        <td className="px-4 py-3">{item.status}</td>
+                        <td className="px-4 py-3">{item.by}</td>
+                        <td className="px-4 py-3">Check Detail</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <table className="w-full text-sm text-left text-gray-500">
+                  <thead className="text-xs text-white uppercase bg-[#00a78e] border-b border-gray-300">
+                    <tr>
+                      <th className="px-4 py-3">No</th>
+                      <th className="px-4 py-3">No APPD</th>
+                      <th className="px-4 py-3">Biller Name</th>
+                      <th className="px-4 py-3">PIC Name</th>
+                      <th className="px-4 py-3">Status</th>
+                      <th className="px-4 py-3">By</th>
+                      <th className="px-4 py-3">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="bg-white border-b hover:bg-gray-50">
+                      <td
+                        className="px-4 py-3 text-center text-medium font-semibold opacity-75"
+                        colSpan={7}
+                      >
+                        Data Not Available
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>

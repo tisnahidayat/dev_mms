@@ -6,10 +6,19 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./App.css";
 import Index from "./components/Layouts/Biller/Index";
 import Maintenance from "./components/Layouts/Maintenance/Index";
+import CreateBiller from "./components/Layouts/Biller/CreateBiller";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Index />,
+  },
+  {
+    path: "/biller",
+    element: <Index />,
+  },
+  {
+    path: "/biller/create",
+    element: <CreateBiller />,
   },
   {
     path: "/maintenance",

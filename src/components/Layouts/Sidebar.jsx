@@ -9,7 +9,7 @@ import {
 import { Link } from "react-router-dom";
 
 const menuItems = [
-  { icon: FaPlusSquare, label: "Biller", path: "/" },
+  { icon: FaPlusSquare, label: "Biller", path: "/biller" },
   { icon: FaClipboardList, label: "Maintenance", path: "/maintenance" },
 ];
 
