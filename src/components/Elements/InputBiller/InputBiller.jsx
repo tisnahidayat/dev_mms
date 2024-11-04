@@ -19,7 +19,7 @@ function InputBiller({
         autoFocus={autoFocus}
         type={type}
         placeholder={placeholder}
-        className={`w-full p-2 border rounded focus:outline-none focus:ring-2 ${
+        className={`w-full p-2 mb-1 border rounded focus:outline-none focus:ring-2 ${
           error
             ? "border-red-500 focus:ring-red-500"
             : "border-gray-300 focus:ring-[#00a78e]"

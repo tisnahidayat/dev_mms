@@ -2,6 +2,7 @@ import React from "react";
 import InputBiller from "../Elements/InputBiller/InputBiller";
 import SelectBiller from "../Elements/InputBiller/SelectBiller";
 import FileInputWithPreview from "../Elements/InputBiller/FileInputWithPreview";
+import { Link } from "react-router-dom";
 
 function BillerForm({
   formData,
@@ -56,6 +57,7 @@ function BillerForm({
           label="Biller Phone Number"
           placeholder="Enter biller phone number..."
           required
+          type="number"
           value={formData.billerPhoneNumber}
           onChange={(e) => onInputChange("billerPhoneNumber", e.target.value)}
           error={errors.billerPhoneNumber}
@@ -64,6 +66,7 @@ function BillerForm({
           label="Biller Email"
           placeholder="Enter biller email..."
           required
+          type="email"
           value={formData.billerEmail}
           onChange={(e) => onInputChange("billerEmail", e.target.value)}
           error={errors.billerEmail}
@@ -149,7 +152,7 @@ function BillerForm({
         <FileInputWithPreview
           label="Upload PKS"
           id="pks"
-          onFileChange={(id, file) => handleFileChange(id, file)}
+          onFileChange={onFileChange}
           error={errors.pks}
         />
 
@@ -157,7 +160,7 @@ function BillerForm({
         <FileInputWithPreview
           label="Upload BPI"
           id="bpi"
-          onFileChange={(id, file) => handleFileChange(id, file)}
+          onFileChange={onFileChange}
           error={errors.bpi}
         />
 
@@ -165,7 +168,7 @@ function BillerForm({
         <FileInputWithPreview
           label="Upload Surat Cabang"
           id="suratCabang"
-          onFileChange={(id, file) => handleFileChange(id, file)}
+          onFileChange={onFileChange}
           error={errors.suratCabang}
         />
 
@@ -173,7 +176,7 @@ function BillerForm({
         <FileInputWithPreview
           label="Upload Bukti Biaya Setup"
           id="buktiBiayaSetup"
-          onFileChange={(id, file) => handleFileChange(id, file)}
+          onFileChange={onFileChange}
           error={errors.buktiBiayaSetup}
         />
       </div>
@@ -184,13 +187,13 @@ function BillerForm({
           type="button"
           className="bg-gray-200 text-black px-4 py-2 rounded mr-2"
         >
-          Back
+          <Link to="/biller">Cancel</Link>
         </button>
         <button
           type="submit"
           className="bg-[#00a78e] text-white px-4 py-2 rounded"
         >
-          Continue
+          Submit
         </button>
       </div>
     </form>

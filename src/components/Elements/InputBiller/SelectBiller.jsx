@@ -14,7 +14,7 @@ function SelectBiller({
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <select
-        className={`w-full p-2 border rounded focus:outline-none focus:ring-2 ${
+        className={`w-full p-2 border rounded focus:outline-none focus:ring-2 mb-1 ${
           error
             ? "border-red-500 focus:ring-red-500"
             : "border-gray-300 focus:ring-[#00a78e]"

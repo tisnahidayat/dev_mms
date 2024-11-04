@@ -78,43 +78,39 @@ const CreateBiller = () => {
   };
 
   const validateForm = () => {
-    const validateForm = () => {
-      const newErrors = {};
-      if (!formData.billerName)
-        newErrors.billerName = "Biller name is required.";
-      if (!formData.typeOfBusiness)
-        newErrors.typeOfBusiness = "Type of business is required.";
-      if (!formData.billerAddress)
-        newErrors.billerAddress = "Biller address is required.";
-      if (!formData.billerEmail)
-        // Pastikan key sesuai dengan formData
-        newErrors.billerEmail = "Biller email is required.";
-      if (!formData.billerPhoneNumber)
-        newErrors.billerPhoneNumber = "Biller phone number is required.";
-      if (!formData.picName) newErrors.picName = "PIC name is required.";
-      if (!formData.department)
-        newErrors.department = "Department is required.";
-      if (!formData.transactionFee)
-        newErrors.transactionFee = "Transaction fee is required.";
-      if (!formData.transactionScheme)
-        newErrors.transactionScheme = "Transaction scheme is required.";
-      if (!formData.feesCoveredBy)
-        newErrors.feesCoveredBy = "Fees covered by is required.";
-      if (!formData.settlementAccountNumber)
-        newErrors.settlementAccountNumber =
-          "Settlement account number is required.";
-      // Validasi untuk setiap dokumen pendukung
-      if (!formData.supportingDocuments.pks)
-        newErrors.pks = "PKS document is required.";
-      if (!formData.supportingDocuments.bpi)
-        newErrors.bpi = "BPI document is required.";
-      if (!formData.supportingDocuments.suratCabang)
-        newErrors.suratCabang = "Surat Cabang is required.";
-      if (!formData.supportingDocuments.buktiBiayaSetup)
-        newErrors.buktiBiayaSetup = "Bukti Biaya Setup is required.";
+    const newErrors = {};
+    if (!formData.billerName) newErrors.billerName = "Biller name is required.";
+    if (!formData.typeOfBusiness)
+      newErrors.typeOfBusiness = "Type of business is required.";
+    if (!formData.billerAddress)
+      newErrors.billerAddress = "Biller address is required.";
+    if (!formData.billerEmail)
+      // Pastikan key sesuai dengan formData
+      newErrors.billerEmail = "Biller email is required.";
+    if (!formData.billerPhoneNumber)
+      newErrors.billerPhoneNumber = "Biller phone number is required.";
+    if (!formData.picName) newErrors.picName = "PIC name is required.";
+    if (!formData.department) newErrors.department = "Department is required.";
+    if (!formData.transactionFee)
+      newErrors.transactionFee = "Transaction fee is required.";
+    if (!formData.transactionScheme)
+      newErrors.transactionScheme = "Transaction scheme is required.";
+    if (!formData.feesCoveredBy)
+      newErrors.feesCoveredBy = "Fees covered by is required.";
+    if (!formData.settlementAccountNumber)
+      newErrors.settlementAccountNumber =
+        "Settlement account number is required.";
+    // Validasi untuk setiap dokumen pendukung
+    if (!formData.supportingDocuments.pks)
+      newErrors.pks = "PKS document is required.";
+    if (!formData.supportingDocuments.bpi)
+      newErrors.bpi = "BPI document is required.";
+    if (!formData.supportingDocuments.suratCabang)
+      newErrors.suratCabang = "Surat Cabang is required.";
+    if (!formData.supportingDocuments.buktiBiayaSetup)
+      newErrors.buktiBiayaSetup = "Bukti Biaya Setup is required.";
 
-      return newErrors;
-    };
+    return newErrors;
   };
 
   return (
