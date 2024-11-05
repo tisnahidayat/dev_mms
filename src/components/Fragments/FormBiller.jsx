@@ -27,9 +27,13 @@ function BillerForm({
         <SelectBiller
           label="Type of Business"
           options={[
-            { label: "Retail", value: "retail" },
-            { label: "Finance", value: "finance" },
-            { label: "Healthcare", value: "healthcare" },
+            { label: "Akademik", value: "akademik" },
+            { label: "Angsuran", value: "angsuran" },
+            { label: "Asuransi", value: "asuransi" },
+            { label: "PL/Property", value: "pl_property" },
+            { label: "Lembaga & Organisasi", value: "lembaga_organisasi" },
+            { label: "Multipayment", value: "multipayment" },
+            { label: "PDAM", value: "pdam" },
           ]}
           required
           value={formData.typeOfBusiness}
@@ -86,9 +90,8 @@ function BillerForm({
         <SelectBiller
           label="Department"
           options={[
-            { label: "Sales", value: "sales" },
-            { label: "Marketing", value: "marketing" },
-            { label: "IT", value: "it" },
+            { label: "Kantor Cabang", value: "kantor_cabang" },
+            { label: "Kantor Pusat", value: "kantor_pusat" },
           ]}
           required
           value={formData.department}
@@ -106,9 +109,8 @@ function BillerForm({
         <SelectBiller
           label="Transaction Scheme"
           options={[
-            { label: "Scheme A", value: "scheme_a" },
-            { label: "Scheme B", value: "scheme_b" },
-            { label: "Scheme C", value: "scheme_c" },
+            { label: "Open Payment", value: "Open Payment" },
+            { label: "Close Payment", value: "Close Payment" },
           ]}
           required
           value={formData.transactionScheme}
@@ -122,8 +124,9 @@ function BillerForm({
         <SelectBiller
           label="Fees Covered By"
           options={[
-            { label: "Company", value: "company" },
-            { label: "Client", value: "client" },
+            { label: "Beban biaya oleh nasabah", value: "Nasabah" },
+            { label: "Beban biaya oleh mitra", value: "Mitra" },
+            { label: "Beban biaya ditanggung dengan kuota", value: "Kuota" },
           ]}
           required
           value={formData.feesCoveredBy}

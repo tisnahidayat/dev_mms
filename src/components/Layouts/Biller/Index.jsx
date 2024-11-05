@@ -124,7 +124,7 @@ const Index = () => {
         <Breadcumbs
           items={[
             { title: "List Biller", path: "/biller" },
-            { title: "Check Detail", path: "list-biller/check-detail" },
+            { title: "Check Detail"},
           ]}
         >
           Biller
@@ -190,7 +190,7 @@ const Index = () => {
                         <td className="px-4 py-3">{item.picName}</td>
                         <td className="px-4 py-3">{item.status}</td>
                         <td className="px-4 py-3">{item.by}</td>
-                        <td className="px-4 py-3">Check Detail</td>
+                        <td className="px-4 py-3"><Link to={`/biller/check-detail`}>Check Detail</Link></td>
                       </tr>
                     ))}
                   </tbody>

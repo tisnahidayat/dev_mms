@@ -25,7 +25,7 @@ const Breadcrumbs = ({ items, children }) => {
               className={`${
                 currentPath === item.path
                   ? "text-[#00a78e] font-semibold"
-                  : "hover:text-[#00a78e]"
+                  : ""
               } transition duration-200`}
             >
               {item.title}

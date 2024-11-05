@@ -1,31 +1,80 @@
+import React, { useState } from "react";
 import InputForm from "../Elements/Input/InputForm";
 import Button from "../Elements/Button/Button";
 import { Link } from "react-router-dom";
 
 const FormLogin = () => {
+  const [formValues, setFormValues] = useState({
+    username: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({
+    username: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+    setErrors({ ...errors, [name]: "" });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formValues.username) {
+      newErrors.username = "Username is required";
+    }
+    if (!formValues.password) {
+      newErrors.password = "Password is required";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      console.log("Form is valid. Submitting...");
+    }
+  };
+
   return (
     <div>
-      <InputForm
-        name="username"
-        text="Username"
-        type="text"
-        placeholder="Enter your username"
-      />
-      <InputForm
-        name="password"
-        text="Password"
-        type="password"
-        placeholder="Enter your password"
-      />
-      <p className="text-end mb-2">
-        <Link
-          to="/forgot-password"
-          className="font-semibold text-sm text-[#00a78e]  cursor-pointer focus:outline-none"
-        >
-          Forgot password?
-        </Link>
-      </p>
-      <Button className={'w-full'}>Login</Button>
+      <form onSubmit={handleSubmit}>
+        <InputForm
+          name="username"
+          text="Username"
+          type="text"
+          placeholder="Enter your username"
+          value={formValues.username}
+          onChange={handleChange}
+          error={errors.username}
+          autoFocus
+          autoComplete={"username"}
+        />
+        <InputForm
+          name="password"
+          text="Password"
+          type="password"
+          placeholder="Enter your password"
+          value={formValues.password}
+          onChange={handleChange}
+          error={errors.password}
+          autoComplete={"current-password"}
+          className={``}
+        />
+        <p className="text-end mb-2">
+          <Link
+            to="/forgot-password"
+            className="font-semibold text-sm text-[#00a78e] cursor-pointer focus:outline-none"
+          >
+            Forgot password?
+          </Link>
+        </p>
+        <Button className="w-full" type="submit">
+          Login
+        </Button>
+      </form>
     </div>
   );
 };
