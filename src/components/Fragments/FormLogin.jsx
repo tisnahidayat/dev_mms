@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import InputForm from "../Elements/Input/InputForm";
 import Button from "../Elements/Button/Button";
 import { Link } from "react-router-dom";
+import Login from "../../services/auth.service";
 
 const FormLogin = () => {
   const [formValues, setFormValues] = useState({
@@ -12,6 +13,8 @@ const FormLogin = () => {
     username: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [loginError, setLoginError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,27 +33,49 @@ const FormLogin = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Form is valid. Submitting...");
+      setLoading(true);
+      setLoginError("");
+
+      Login(formValues)
+        .then((response) => {
+          console.log("Login berhasil:", response);
+          window.location.href = "/";
+        })
+        .catch((error) => {
+          console.log("Login gagal:", error);
+          setLoginError("Username or password incorrect");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   };
 
   return (
-    <div>
+    <div className="relative">
+      {loading && (
+        <div className="absolute flex justify-center items-center inset-0 z-50">
+          <img
+            src="/images/loader.gif"
+            alt="loading..."
+            className="w-10 h-10"
+          />
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <InputForm
           name="username"
           text="Username"
           type="text"
-          placeholder="Enter your username"
+          placeholder="Enter your password"
           value={formValues.username}
           onChange={handleChange}
           error={errors.username}
           autoFocus
-          autoComplete={"username"}
+          autoComplete="username"
         />
         <InputForm
           name="password"
@@ -60,9 +85,10 @@ const FormLogin = () => {
           value={formValues.password}
           onChange={handleChange}
           error={errors.password}
-          autoComplete={"current-password"}
-          className={``}
+          autoComplete="current-password"
         />
+        {loginError && <p className="text-red-600">{loginError}</p>}{" "}
+        {/* Nampilin error login */}
         <p className="text-end mb-2">
           <Link
             to="/forgot-password"
@@ -71,8 +97,8 @@ const FormLogin = () => {
             Forgot password?
           </Link>
         </p>
-        <Button className="w-full" type="submit">
-          Login
+        <Button className="w-full" type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
         </Button>
       </form>
     </div>
