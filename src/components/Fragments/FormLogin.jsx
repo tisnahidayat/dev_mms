@@ -20,12 +20,13 @@ const FormLogin = () => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
     setErrors({ ...errors, [name]: "" });
+    console.log(name, value);
   };
 
   const validateForm = () => {
     const newErrors = {};
     if (!formValues.username) {
-      newErrors.username = "Username is required";
+      newErrors.username = "Username is required";      
     }
     if (!formValues.password) {
       newErrors.password = "Password is required";
@@ -88,7 +89,6 @@ const FormLogin = () => {
           autoComplete="current-password"
         />
         {loginError && <p className="text-red-600">{loginError}</p>}{" "}
-        {/* Nampilin error login */}
         <p className="text-end mb-2">
           <Link
             to="/forgot-password"

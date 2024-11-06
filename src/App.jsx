@@ -8,10 +8,15 @@ import CreateBiller from "./components/Layouts/Biller/CreateBiller";
 import Detail from "./components/Layouts/Biller/Detail";
 import LoginLayouts from "./components/Layouts/LoginLayouts";
 import FormPasswordLayout from "./components/Layouts/ForgotPasswordLayouts";
+import EmailSent from "./components/Layouts/EmailSent";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Index />,
+  },
+  {
+    path: "/email-sent",
+    element: <EmailSent />,
   },
   {
     path: "/biller",
