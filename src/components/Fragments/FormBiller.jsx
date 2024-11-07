@@ -46,7 +46,7 @@ function BillerForm({
       <div className="grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <InputBiller
           label="Biller Address"
-          type="email"
+          type="text"
           placeholder="Enter biller address..."
           required
           value={formData.billerAddress}

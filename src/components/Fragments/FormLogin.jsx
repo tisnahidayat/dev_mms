@@ -26,7 +26,7 @@ const FormLogin = () => {
   const validateForm = () => {
     const newErrors = {};
     if (!formValues.username) {
-      newErrors.username = "Username is required";      
+      newErrors.username = "Username is required";
     }
     if (!formValues.password) {
       newErrors.password = "Password is required";
@@ -71,7 +71,7 @@ const FormLogin = () => {
           name="username"
           text="Username"
           type="text"
-          placeholder="Enter your password"
+          placeholder="Enter your username"
           value={formValues.username}
           onChange={handleChange}
           error={errors.username}
