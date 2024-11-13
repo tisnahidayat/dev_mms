@@ -5,8 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 const FormForgotPassword = ({ email, setEmail, error, setError }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const staticEmail = "tisnahidayat150302@gmail.com"; // Email statis
-  const navigate = useNavigate(); // Hook untuk navigasi
+  const staticEmail = "tisnahidayat150302@gmail.com";
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setEmail(e.target.value);
@@ -18,7 +18,6 @@ const FormForgotPassword = ({ email, setEmail, error, setError }) => {
     setIsLoading(true);
 
     if (email === staticEmail) {
-      // Simulasi pengiriman email
       setTimeout(() => {
         setIsLoading(false);
         navigate("/email-sent");
@@ -32,11 +31,10 @@ const FormForgotPassword = ({ email, setEmail, error, setError }) => {
   return (
     <div className="relative">
       {" "}
-      {/* Membungkus dengan div relatif */}
-      {isLoading && ( // Menampilkan loader saat loading
+      {isLoading && (
         <div className="absolute flex justify-center items-center inset-0 z-50">
           <img
-            src="/images/loader.gif" // Pastikan path ini sesuai
+            src="/images/loader.gif"
             alt="Loading..."
             className="w-10 h-10"
           />

@@ -38,7 +38,7 @@ const Input = ({
           onClick={togglePasswordVisibility}
           className="absolute inset-y-0 right-3 flex items-center text-gray-500 focus:outline-none"
         >
-          {showPassword ? <FaEyeSlash className="text-[#00a78e]"/> : <FaEye />}
+          {showPassword ? <FaEyeSlash className="text-[#00a78e]" /> : <FaEye />}
         </button>
       )}
     </div>

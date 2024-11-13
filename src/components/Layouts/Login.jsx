@@ -2,7 +2,7 @@ import React from "react";
 import BackgroundLayouts from "./Asset/BackgroundLayouts";
 import FormLogin from "../Fragments/FormLogin";
 
-const LoginLayouts = () => {
+const Login = () => {
   return (
     <div className="flex flex-col md:flex-row w-full h-screen">
       <div className="relative hidden md:flex w-3/5 h-full flex-col">
@@ -35,4 +35,4 @@ const LoginLayouts = () => {
   );
 };
 
-export default LoginLayouts;
+export default Login;

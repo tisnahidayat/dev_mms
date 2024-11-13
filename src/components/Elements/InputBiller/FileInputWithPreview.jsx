@@ -9,7 +9,7 @@ function FileInputWithPreview({ label, id, onFileChange, error }) {
     if (file) {
       setFileName(file.name);
       onFileChange(id, file);
-    }
+    }2
   };
 
   return (

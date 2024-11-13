@@ -4,7 +4,6 @@ import Sidebar from "../Sidebar";
 import Header from "../Asset/Header";
 import Breadcumbs from "../Asset/Breadcumbs";
 import SidebarMobile from "../SidebarMobile";
-import { FaPlusCircle } from "react-icons/fa";
 
 const Detail = () => {
   const location = useLocation();

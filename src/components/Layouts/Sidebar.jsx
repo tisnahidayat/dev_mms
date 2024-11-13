@@ -90,8 +90,10 @@ const MenuItems = ({ open, activeItem, isMobile, toggleSidebar }) => (
       return (
         <li
           key={index}
-          className={`flex items-center gap-2 p-3 my-2 rounded-md cursor-pointer transition-transform duration-300 ease-in-out transform hover:translate-x-0.5 hover:bg-[#46BCB0] ${
-            isActive ? "bg-[#46BCB0]" : ""
+          className={`flex items-center gap-2 p-3 my-2 rounded-md cursor-pointer transition-transform duration-300 ease-in-out transform ${
+            isActive
+              ? "bg-white text-[#00a78e] transition-colors duration-300 ease-in-out"
+              : "hover:bg-[#46BCB0] hover:translate-x-0.5 transition-colors duration-300 ease-in-out"
           }`}
           onClick={() => {
             if (isMobile) toggleSidebar(); // Hide sidebar on mobile when item is clicked

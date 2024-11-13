@@ -8,12 +8,11 @@ const EmailSent = () => {
   const [gifSource, setGifSource] = useState(sendEmailGif);
 
   useEffect(() => {
-    // Ubah GIF setelah 10 detik
     const timer = setTimeout(() => {
       setGifSource(successEmailGif);
     }, 3000);
 
-    return () => clearTimeout(timer); // Membersihkan timer saat komponen di-unmount
+    return () => clearTimeout(timer);
   }, []);
 
   return (

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import BackgroundLayouts from "./Asset/BackgroundLayouts";
 import FormForgotPassword from "../Fragments/FormForgotPassword";
 
-const FormPasswordLayout = () => {
+const FormPassword = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
@@ -33,4 +33,4 @@ const FormPasswordLayout = () => {
   );
 };
 
-export default FormPasswordLayout;
+export default FormPassword;

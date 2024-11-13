@@ -6,8 +6,8 @@ import Index from "./components/Layouts/Biller/Index";
 import Maintenance from "./components/Layouts/Maintenance/Index";
 import CreateBiller from "./components/Layouts/Biller/CreateBiller";
 import Detail from "./components/Layouts/Biller/Detail";
-import LoginLayouts from "./components/Layouts/LoginLayouts";
-import FormPasswordLayout from "./components/Layouts/ForgotPasswordLayouts";
+import Login from "./components/Layouts/Login";
+import FormPassword from "./components/Layouts/ForgotPassword";
 import EmailSent from "./components/Layouts/EmailSent";
 const router = createBrowserRouter([
   {
@@ -36,11 +36,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <LoginLayouts />,
+    element: <Login />,
   },
   {
     path: "/forgot-password",
-    element: <FormPasswordLayout />,
+    element: <FormPassword />,
   },
   {
     path: "/new-password",

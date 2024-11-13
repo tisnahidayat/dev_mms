@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react"; // Import useMemo untuk optimalisasi
 import { Link, useLocation } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import Header from "../Asset/Header";
@@ -6,7 +6,7 @@ import Breadcumbs from "../Asset/Breadcumbs";
 import Search from "../../Elements/Search/Search";
 import Dropdown from "../../Elements/Search/Dropdown";
 import SidebarMobile from "../SidebarMobile";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const Index = () => {
   const [selectedStatus, setSelectedStatus] = useState("All");
@@ -15,46 +15,102 @@ const Index = () => {
   const activeItem = location.pathname === "/biller" ? "Biller" : "";
   const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const sidebarRef = useRef(null); // Sidebar reference
+  const sidebarRef = useRef(null);
 
-  const data = [
-    {
-      no: 1,
-      appd: "APPD001",
-      billerName: "Universitas Ahmad Dahlan",
-      picName: "Customer Service",
-      status: "Proposed",
-      by: "Cabang Pembantu",
-    },
-    {
-      no: 2,
-      appd: "APPD002",
-      billerName: "PT Telekomunikasi Indonesia",
-      picName: "Support",
-      status: "Approved",
-      by: "Cabang Utama",
-    },
-    {
-      no: 3,
-      appd: "APPD003",
-      billerName: "Rumah Sakit Islam",
-      picName: "Teller",
-      status: "Completed",
-      by: "Cabang Utama",
-    },
-  ];
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
-  const filteredData = data.filter((item) => {
-    const matchesSearch =
-      item.appd.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.billerName.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      selectedStatus === "All" || item.status === selectedStatus;
-    return matchesSearch && matchesStatus;
-  });
+  const data = useMemo(
+    () => [
+      {
+        no: 1,
+        appd: "APPD001",
+        billerName: "Universitas Ahmad Dahlan",
+        picName: "Customer Service",
+        status: "Proposed",
+        by: "Cabang Pembantu",
+      },
+      {
+        no: 2,
+        appd: "APPD002",
+        billerName: "PT Telekomunikasi Indonesia",
+        picName: "Support",
+        status: "Approved",
+        by: "Cabang Utama",
+      },
+      {
+        no: 3,
+        appd: "APPD003",
+        billerName: "Rumah Sakit Islam",
+        picName: "Teller",
+        status: "Completed",
+        by: "Cabang Utama",
+      },
+      {
+        no: 4,
+        appd: "APPD004",
+        billerName: "Bank BRI",
+        picName: "Account Manager",
+        status: "Revision",
+        by: "Cabang Pembantu",
+      },
+      {
+        no: 5,
+        appd: "APPD005",
+        billerName: "Perusahaan ABC",
+        picName: "Customer Service",
+        status: "Rejected",
+        by: "Cabang Utama",
+      },
+      {
+        no: 6,
+        appd: "APPD006",
+        billerName: "Perusahaan XYZ",
+        picName: "Manager",
+        status: "Proposed",
+        by: "Cabang Utama",
+      },
+      {
+        no: 7,
+        appd: "APPD007",
+        billerName: "Sekolah A",
+        picName: "Admin",
+        status: "Approved",
+        by: "Cabang Pembantu",
+      },
+    ],
+    []
+  );
+
+  const filteredData = useMemo(() => {
+    return data.filter((item) => {
+      const matchesSearch =
+        item.appd.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.billerName.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus =
+        selectedStatus === "All" || item.status === selectedStatus;
+      return matchesSearch && matchesStatus;
+    });
+  }, [data, searchTerm, selectedStatus]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleSearchChange = (term) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+  };
 
   const handleSortStatus = (status) => {
     setSelectedStatus(status);
+    setCurrentPage(1);
   };
 
   useEffect(() => {
@@ -62,9 +118,9 @@ const Index = () => {
       const mobileView = window.innerWidth < 900;
       setIsMobile(mobileView);
       if (mobileView) {
-        setIsSidebarOpen(false); // Close sidebar by default on mobile
+        setIsSidebarOpen(false);
       } else {
-        setIsSidebarOpen(true); // Open sidebar by default on desktop
+        setIsSidebarOpen(true);
       }
     };
 
@@ -79,7 +135,7 @@ const Index = () => {
         !sidebarRef.current.contains(event.target) &&
         isSidebarOpen
       ) {
-        setIsSidebarOpen(false); // Close sidebar if click is outside sidebar
+        setIsSidebarOpen(false);
       }
     };
 
@@ -100,23 +156,19 @@ const Index = () => {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Sidebar Component */}
       <Sidebar
-        ref={sidebarRef} // Attach ref to Sidebar
+        ref={sidebarRef}
         activeItem={activeItem}
         isMobile={isMobile}
         isSidebarOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar}
       />
 
-      {/* Main Content */}
       <main className="flex-1 p-5 overflow-auto">
-        {/* Show SidebarMobile toggle button only in mobile view */}
         {isMobile && (
           <SidebarMobile onClick={toggleSidebar}>Biller</SidebarMobile>
         )}
 
-        {/* Header, Breadcrumbs, and Content */}
         <Header
           title="Biller"
           subTitle="View and manage all registered billers."
@@ -124,7 +176,7 @@ const Index = () => {
         <Breadcumbs
           items={[
             { title: "List Biller", path: "/biller" },
-            { title: "Check Detail"},
+            { title: "Check Detail" },
           ]}
         >
           Biller
@@ -139,7 +191,7 @@ const Index = () => {
               <Search
                 className="sm:w-[50%] w-full"
                 searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
+                setSearchTerm={handleSearchChange}
               />
               <Dropdown
                 options={[
@@ -163,9 +215,8 @@ const Index = () => {
               </button>
             </div>
 
-            {/* Table Content */}
             <div className="overflow-auto">
-              {filteredData.length > 0 ? (
+              {currentData.length > 0 ? (
                 <table className="w-full text-sm text-left text-gray-500">
                   <thead className="text-xs text-white uppercase bg-[#00a78e] border-b border-gray-300">
                     <tr>
@@ -179,18 +230,22 @@ const Index = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredData.map((item, index) => (
+                    {currentData.map((item, index) => (
                       <tr
                         key={item.no}
                         className="bg-white border-b hover:bg-gray-50"
                       >
-                        <td className="px-4 py-3">{index + 1}</td>
+                        <td className="px-4 py-3">
+                          {indexOfFirstItem + index + 1}
+                        </td>
                         <td className="px-4 py-3">{item.appd}</td>
                         <td className="px-4 py-3">{item.billerName}</td>
                         <td className="px-4 py-3">{item.picName}</td>
                         <td className="px-4 py-3">{item.status}</td>
                         <td className="px-4 py-3">{item.by}</td>
-                        <td className="px-4 py-3"><Link to={`/biller/check-detail`}>Check Detail</Link></td>
+                        <td className="px-4 py-3">
+                          <Link to={`/biller/check-detail`}>Check Detail</Link>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -220,6 +275,77 @@ const Index = () => {
                   </tbody>
                 </table>
               )}
+            </div>
+
+            {/* Pagination */}
+            <div className="flex justify-center mt-4">
+              <nav className="inline-flex items-center">
+                {/* Prev Button */}
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className={`w-8 h-8 flex items-center justify-center border rounded ${
+                    currentPage === 1
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-white text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  <FaChevronLeft size={15} />
+                </button>
+
+                {/* Page Numbers with Ellipsis */}
+                {Array.from({ length: totalPages }, (_, index) => {
+                  const pageNumber = index + 1;
+                  const showPage =
+                    pageNumber === 1 ||
+                    pageNumber === totalPages ||
+                    (pageNumber >= currentPage - 1 &&
+                      pageNumber <= currentPage + 1);
+
+                  if (showPage) {
+                    return (
+                      <button
+                        key={pageNumber}
+                        onClick={() => handlePageChange(pageNumber)}
+                        className={`w-8 h-8 flex items-center justify-center border rounded ${
+                          currentPage === pageNumber
+                            ? "bg-[#00a78e] text-white"
+                            : "bg-white text-gray-600 hover:bg-gray-100"
+                        }`}
+                      >
+                        {pageNumber}
+                      </button>
+                    );
+                  } else if (
+                    (pageNumber === currentPage - 2 ||
+                      pageNumber === currentPage + 2) &&
+                    totalPages > 5
+                  ) {
+                    return (
+                      <span
+                        key={`ellipsis-${pageNumber}`}
+                        className="w-8 h-8 flex items-center justify-center text-gray-500"
+                      >
+                        ...
+                      </span>
+                    );
+                  }
+                  return null;
+                })}
+
+                {/* Next Button */}
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className={`w-8 h-8 flex items-center justify-center border rounded ${
+                    currentPage === totalPages
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-white text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  <FaChevronRight size={15} />
+                </button>
+              </nav>
             </div>
           </div>
         </div>
