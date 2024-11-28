@@ -29,7 +29,6 @@ function SelectBiller({
           </option>
         ))}
       </select>
-      {/* Area pesan error dengan min-h untuk menjaga ruang tetap */}
       <p className="text-red-500 text-xs">{error || ""}</p>
     </div>
   );

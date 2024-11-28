@@ -39,7 +39,7 @@ const Dropdown = ({ options, onSelect }) => {
         onClick={handleToggle}
         className={`w-full text-sm border p-1 pr-8 pl-3 cursor-pointer bg-white ${
           isOpen
-            ? "border-[#00a78e] ring-2 ring-[#00a78e] ring-offset-1"
+            ? "border-[#00a78e] ring-1 ring-[#00a78e]"
             : "border-[#00a78e]"
         } ${selectedValue ? "text-slate-400" : "text-slate-400"}`}
         style={{ borderRadius: "4px" }}

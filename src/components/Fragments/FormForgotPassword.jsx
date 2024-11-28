@@ -2,35 +2,61 @@ import React, { useState } from "react";
 import InputForm from "../Elements/Input/InputForm";
 import Button from "../Elements/Button/Button";
 import { Link, useNavigate } from "react-router-dom";
+import { forgetPassword } from "../../services/authAPI";
 
 const FormForgotPassword = ({ email, setEmail, error, setError }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const staticEmail = "tisnahidayat150302@gmail.com";
+  const [emailError, setEmailError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setEmail(e.target.value);
     setError("");
+    setEmailError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    if (email === staticEmail) {
-      setTimeout(() => {
-        setIsLoading(false);
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    if (!email) {
+      setEmailError("Email cannot be empty.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!emailPattern.test(email)) {
+      setEmailError("Invalid email format, please check again.");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await forgetPassword(email);
+
+      if (response?.status === 200) {
         navigate("/email-sent");
-      }, 1500);
-    } else {
-      setError("Email not found.");
+      } else if (response?.status === 400) {
+        setEmailError("Email not found, please try again.");
+      } else {
+        setError("Failed to send email, please try again.");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      if (error.response?.status === 400) {
+        setEmailError("Email not found, please try again.");
+      } else {
+        setError("Failed to send email, please try again.");
+      }
+    } finally {
       setIsLoading(false);
     }
   };
 
   return (
     <div className="relative">
-      {" "}
       {isLoading && (
         <div className="absolute flex justify-center items-center inset-0 z-50">
           <img
@@ -50,9 +76,10 @@ const FormForgotPassword = ({ email, setEmail, error, setError }) => {
           autoComplete="email"
           value={email}
           onChange={handleChange}
-          error={error}
+          error={emailError}
           required
         />
+        {emailError && <p className="text-red-600 text-sm">{emailError}</p>}
         <Button className="w-full" type="submit" disabled={isLoading}>
           Submit
         </Button>

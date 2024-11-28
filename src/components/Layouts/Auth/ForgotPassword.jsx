@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import BackgroundLayouts from "./Asset/BackgroundLayouts";
-import FormForgotPassword from "../Fragments/FormForgotPassword";
+import BackgroundLayouts from "../Asset/BackgroundLayouts";
+import FormForgotPassword from "../../Fragments/FormForgotPassword";
 
 const FormPassword = () => {
   const [email, setEmail] = useState("");

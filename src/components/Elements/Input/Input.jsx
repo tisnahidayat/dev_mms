@@ -7,9 +7,11 @@ const Input = ({
   placeholder,
   value,
   onChange,
+  error,
   className,
   autoFocus,
   autoComplete,
+  onPaste, // Terima onPaste sebagai props
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -30,7 +32,8 @@ const Input = ({
         value={value}
         onChange={onChange}
         autoComplete={autoComplete}
-        className={`px-3 py-1 rounded-md border border-[#00a78e] focus:outline-none focus:ring-2 focus:ring-[#00a78e] focus:shadow-md focus:ring-offset-2 w-full ${className}`}
+        onPaste={onPaste} // Tambahkan onPaste di sini
+        className={`px-3 py-1 rounded-md border border-[#00a78e] focus:outline-none focus:ring-2 focus:ring-[#00a78e] focus:shadow-md w-full ${className}`}
       />
       {isPasswordType && (
         <button
@@ -38,7 +41,7 @@ const Input = ({
           onClick={togglePasswordVisibility}
           className="absolute inset-y-0 right-3 flex items-center text-gray-500 focus:outline-none"
         >
-          {showPassword ? <FaEyeSlash className="text-[#00a78e]" /> : <FaEye />}
+          {showPassword ? <FaEyeSlash className={`text-[#00a78e]`} /> : <FaEye />}
         </button>
       )}
     </div>

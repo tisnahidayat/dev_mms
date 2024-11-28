@@ -1,57 +1,61 @@
 import React, { useState } from "react";
 import InputForm from "../Elements/Input/InputForm";
 import Button from "../Elements/Button/Button";
-import { Link } from "react-router-dom";
-import Login from "../../services/auth.service";
+import { Link, useNavigate } from "react-router-dom";
+import { login } from "../../services/authAPI";
 
 const FormLogin = () => {
   const [formValues, setFormValues] = useState({
     username: "",
     password: "",
   });
-  const [errors, setErrors] = useState({
-    username: "",
-    password: "",
-  });
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    setErrors({ ...errors, [name]: "" });
-    console.log(name, value);
+    setErrors({ ...errors, [name]: "" }); // Reset error for the current field
   };
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formValues.username) {
-      newErrors.username = "Username is required";
+    if (!formValues.username.trim()) {
+      newErrors.username = true; // Mark field with error
     }
-    if (!formValues.password) {
-      newErrors.password = "Password is required";
+    if (!formValues.password.trim()) {
+      newErrors.password = true; // Mark field with error
     }
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      setLoading(true);
-      setLoginError("");
 
-      Login(formValues)
-        .then((response) => {
-          console.log("Login berhasil:", response);
-          window.location.href = "/";
-        })
-        .catch((error) => {
-          console.log("Login gagal:", error);
-          setLoginError("Username or password incorrect");
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+    if (Object.keys(newErrors).length > 0) {
+      setLoginError("Username and password are required");
+      return false;
+    }
+
+    return true;
+  };
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validasi Form
+    if (!validateForm()) return;
+
+    setLoading(true);
+    setLoginError("");
+
+    try {
+      await login(formValues);
+      navigate("/biller");
+    } catch (error) {
+      console.error("Login gagal:", error.message || error);
+      setLoginError("Username or password incorrect");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,9 +90,10 @@ const FormLogin = () => {
           value={formValues.password}
           onChange={handleChange}
           error={errors.password}
+          onPaste={(e) => e.preventDefault()}
           autoComplete="current-password"
         />
-        {loginError && <p className="text-red-600">{loginError}</p>}{" "}
+        {loginError && <p className="text-red-600 text-sm">{loginError}</p>}
         <p className="text-end mb-2">
           <Link
             to="/forgot-password"

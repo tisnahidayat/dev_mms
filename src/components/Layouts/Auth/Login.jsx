@@ -1,6 +1,6 @@
 import React from "react";
-import BackgroundLayouts from "./Asset/BackgroundLayouts";
-import FormLogin from "../Fragments/FormLogin";
+import BackgroundLayouts from "../Asset/BackgroundLayouts";
+import FormLogin from "../../Fragments/FormLogin";
 
 const Login = () => {
   return (
@@ -10,11 +10,11 @@ const Login = () => {
       </div>
 
       <div className="w-full md:w-2/5 h-full bg-white flex flex-col justify-center items-center p-6 md:p-14">
-          <img
-            src="/images/logo-mms.png"
-            alt="logo-mms"
-            className="w-64 md:w-80"
-          />
+        <img
+          src="/images/logo-mms.png"
+          alt="logo-mms"
+          className="w-64 md:w-80"
+        />
         <div className="flex flex-col justify-center items-center h-full">
           <div className="w-3/4 flex flex-col">
             <h1 className="text-xl md:text-2xl font-bold text-[#00a78e]">

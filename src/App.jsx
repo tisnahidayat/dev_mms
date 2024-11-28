@@ -1,19 +1,16 @@
 import React from "react";
-import NewPassword from "./components/Layouts/SetNewPassword";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./App.css";
 import Index from "./components/Layouts/Biller/Index";
 import Maintenance from "./components/Layouts/Maintenance/Index";
 import CreateBiller from "./components/Layouts/Biller/CreateBiller";
 import Detail from "./components/Layouts/Biller/Detail";
-import Login from "./components/Layouts/Login";
-import FormPassword from "./components/Layouts/ForgotPassword";
-import EmailSent from "./components/Layouts/EmailSent";
+import Login from "./components/Layouts/Auth/Login";
+import EmailSent from "./components/Layouts/Auth/EmailSent";
+import ForgotPassword from "./components/Layouts/Auth/ForgotPassword";
+import SetPassword from "./components/Layouts/Auth/SetPassword";
+
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Index />,
-  },
   {
     path: "/email-sent",
     element: <EmailSent />,
@@ -40,11 +37,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/forgot-password",
-    element: <FormPassword />,
+    element: <ForgotPassword />,
   },
   {
     path: "/new-password",
-    element: <NewPassword />,
+    element: <SetPassword />,
   },
 ]);
 function App() {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import sendEmailGif from "/images/send-email.gif";
 import successEmailGif from "/images/email-success.gif";
-import BackgroundLayouts from "./Asset/BackgroundLayouts";
+import BackgroundLayouts from "../Asset/BackgroundLayouts";
 
 const EmailSent = () => {
   const [gifSource, setGifSource] = useState(sendEmailGif);

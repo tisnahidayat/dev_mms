@@ -7,12 +7,13 @@ const InputForm = ({
   text,
   type,
   placeholder,
-  className,
+  className = "",
   value,
   onChange,
   error,
+  onPaste,
   autoFocus = false,
-  autoComplete, // Terima autoComplete sebagai props
+  autoComplete,
 }) => {
   return (
     <div className={`flex flex-col max-w-md ${className}`}>
@@ -21,16 +22,18 @@ const InputForm = ({
         id={name}
         type={type}
         name={name}
-        autoComplete={autoComplete} // Teruskan autoComplete ke Input
+        autoComplete={autoComplete}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
         autoFocus={autoFocus}
-        className={`border my-2 ${
-          error ? "border-red-500" : "border-gray-300"
-        } rounded p-2`}
+        onPaste={onPaste}
+        className={`border my-2 px-3 py-1 rounded ${
+          error
+            ? "border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
+            : "border-gray-300"
+        }`}
       />
-      <p className="text-red-500 text-sm min-h-1">{error || ""}</p>
     </div>
   );
 };

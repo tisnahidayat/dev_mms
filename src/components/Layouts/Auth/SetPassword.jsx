@@ -1,7 +1,7 @@
-import BackgroundLayouts from "./Asset/BackgroundLayouts";
-import FormSetNewPassword from "../Fragments/FormSetPassword";
+import BackgroundLayouts from "../Asset/BackgroundLayouts";
+import FormSetNewPassword from "../../Fragments/FormSetPassword";
 
-const NewPasswordLayouts = () => {
+const SetPassword = () => {
   return (
     <div className="flex flex-col md:flex-row w-full h-screen">
       <div className="relative hidden md:flex w-3/5 h-full flex-col">
@@ -31,4 +31,4 @@ const NewPasswordLayouts = () => {
   );
 };
 
-export default NewPasswordLayouts;
+export default SetPassword;
