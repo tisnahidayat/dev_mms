@@ -1,20 +1,14 @@
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import "./App.css";
 import Index from "./components/Layouts/Biller/Index";
 import Maintenance from "./components/Layouts/Maintenance/Index";
 import CreateBiller from "./components/Layouts/Biller/CreateBiller";
 import Detail from "./components/Layouts/Biller/Detail";
 import Login from "./components/Layouts/Auth/Login";
-import EmailSent from "./components/Layouts/Auth/EmailSent";
 import ForgotPassword from "./components/Layouts/Auth/ForgotPassword";
 import SetPassword from "./components/Layouts/Auth/SetPassword";
 
 const router = createBrowserRouter([
-  {
-    path: "/email-sent",
-    element: <EmailSent />,
-  },
   {
     path: "/biller",
     element: <Index />,
@@ -24,7 +18,7 @@ const router = createBrowserRouter([
     element: <CreateBiller />,
   },
   {
-    path: "/biller/check-detail",
+    path: "/biller/detail/:id",
     element: <Detail />,
   },
   {

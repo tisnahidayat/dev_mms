@@ -7,7 +7,7 @@ import Search from "../../Elements/Search/Search";
 import Dropdown from "../../Elements/Search/Dropdown";
 import SidebarMobile from "../SidebarMobile";
 import { FaPlusCircle } from "react-icons/fa";
-import fetchBillers from "../../../services/billerAPI"; // Import fetchBillers
+import { fetchBillers, detailBiller } from "../../../services/billerAPI"; // Import fetchBillers
 
 const Index = () => {
   const location = useLocation();
@@ -25,7 +25,7 @@ const Index = () => {
   // Fetching billers data from API
   const loadBillersData = async () => {
     setLoading(true);
-    setError(null); // Reset error state before fetching
+    setError(null);
 
     try {
       const data = await fetchBillers();
@@ -126,36 +126,38 @@ const Index = () => {
                 "Completed",
               ]}
             />
-            <button className="w-full sm:w-auto font-semibold text-sm text-white py-1 px-2 bg-[#00a78e] rounded-md ml-auto hover:bg-[#00a78e]/80 hover:text-white ease-in-out duration-200">
-              <Link
-                to="/biller/create"
-                className="flex items-center justify-center gap-2"
-              >
+            <Link
+              to="/biller/create"
+              className="w-full sm:w-auto font-semibold text-sm text-white py-1 px-2 bg-[#00a78e] rounded-md ml-auto hover:bg-[#00a78e]/80 hover:text-white ease-in-out duration-200"
+            >
+              <span className="flex items-center justify-center gap-2">
                 Create Biller <FaPlusCircle />
-              </Link>
-            </button>
+              </span>
+            </Link>
           </div>
 
           {/* Billers Table */}
-          <div className="overflow-auto">
+          <div className="overflow-x-auto">
             {loading ? (
               <div className="text-center text-gray-500">Loading...</div>
             ) : error ? (
               <div className="text-center text-red-500">{error}</div>
             ) : billersData.length > 0 ? (
               <table className="min-w-full text-sm text-left text-gray-500">
-                <thead className="text-xs text-white uppercase bg-[#00a78e] border-b border-gray-300">
+                <thead className="text-xs text-center text-white uppercase bg-[#00a78e] border-b border-gray-300">
                   <tr>
                     <th className="px-4 py-3">No</th>
                     <th className="px-4 py-3">No APPD</th>
-                    <th className="px-4 py-3">Biller Name</th>
-                    <th className="px-4 py-3">PIC Name</th>
+                    <th className="px-4 py-3 hidden md:table-cell">
+                      Biller Name
+                    </th>
+                    <th className="px-4 py-3 hidden lg:table-cell">PIC Name</th>
                     <th className="px-4 py-3">Status</th>
-                    <th className="px-4 py-3">By</th>
+                    <th className="px-4 py-3 hidden lg:table-cell">By</th>
                     <th className="px-4 py-3">Action</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="text-center">
                   {billersData.map((item, index) => (
                     <tr
                       key={index}
@@ -163,12 +165,41 @@ const Index = () => {
                     >
                       <td className="px-4 py-3">{index + 1}</td>
                       <td className="px-4 py-3">{item.appd}</td>
-                      <td className="px-4 py-3">{item.name}</td>
-                      <td className="px-4 py-3">{item.picName}</td>
-                      <td className="px-4 py-3">{item.submissionStatus}</td>
-                      <td className="px-4 py-3">{item.createdBy}</td>
+                      <td className="px-4 py-3 hidden md:table-cell">
+                        {item.name}
+                      </td>
+                      <td className="px-4 py-3 hidden lg:table-cell">
+                        {item.picName}
+                      </td>
+                      <td className="flex px-4 py-3 items-center justify-center">
+                        <span
+                          className={`py-1 w-[70%] text-center text-xs rounded-lg text-white capitalize ${
+                            item.submissionStatus === "APPROVED"
+                              ? "bg-[#18908E]"
+                              : item.submissionStatus === "PROPOSED"
+                              ? "bg-[#106EF2]"
+                              : item.submissionStatus === "REJECTED"
+                              ? "bg-[#D1351D]"
+                              : item.submissionStatus === "REVISION"
+                              ? "bg-[#F9B300]"
+                              : item.submissionStatus === "COMPLETED"
+                              ? "bg-gray-500"
+                              : "bg-gray-300"
+                          }`}
+                        >
+                          {item.submissionStatus.toLowerCase()}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 hidden lg:table-cell">
+                        {item.createdBy}
+                      </td>
                       <td className="px-4 py-3">
-                        <Link to={`/biller/check-detail`}>Check Detail</Link>
+                        <Link
+                          to={`/biller/detail/${item.id}`}
+                          className="text-blue-600 hover:underline"
+                        >
+                          Check Detail
+                        </Link>
                       </td>
                     </tr>
                   ))}

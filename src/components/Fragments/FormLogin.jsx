@@ -16,16 +16,16 @@ const FormLogin = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    setErrors({ ...errors, [name]: "" }); // Reset error for the current field
+    setErrors({ ...errors, [name]: "" });
   };
 
   const validateForm = () => {
     const newErrors = {};
     if (!formValues.username.trim()) {
-      newErrors.username = true; // Mark field with error
+      newErrors.username = true;
     }
     if (!formValues.password.trim()) {
-      newErrors.password = true; // Mark field with error
+      newErrors.password = true;
     }
     setErrors(newErrors);
 

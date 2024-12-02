@@ -1,41 +1,94 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import InputForm from "../Elements/Input/InputForm";
 import Button from "../Elements/Button/Button";
+import { resetPassword } from "../../services/authAPI";
 
 const FormSetNewPassword = () => {
   const [formValues, setFormValues] = useState({
     password: "",
     retypePassword: "",
   });
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [resetError, setResetError] = useState("");
+  const [token, setToken] = useState("");
 
-  // Fungsi untuk menangani perubahan input
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({
-      ...formValues,
-      [name]: value,
-    });
-    setError(""); // Hapus pesan error saat pengguna mulai mengetik
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const tokenFromUrl = queryParams.get("token");
+    if (tokenFromUrl) {
+      setToken(tokenFromUrl);
+    } else {
+      setResetError("Invalid or expired token");
+      navigate("/login");
+    }
+  }, [location, navigate]);
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formValues.password.trim()) {
+      newErrors.password = true;
+    } else if (formValues.password.length < 14) {
+      newErrors.password = true;
+      setResetError("Password must be at least 14 characters long");
+    }
+
+    if (!formValues.retypePassword.trim()) {
+      newErrors.retypePassword = true;
+    } else if (formValues.password !== formValues.retypePassword) {
+      newErrors.retypePassword = true;
+      setResetError("Passwords do not match");
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  // Fungsi untuk menangani submit form
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+    setErrors({ ...errors, [name]: "" });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formValues.password || !formValues.retypePassword) {
-      setError("Both fields are required");
-    } else if (formValues.password !== formValues.retypePassword) {
-      setError("Passwords do not match");
-    } else {
-      setError("");
-      console.log("Passwords match. Form submitted successfully.");
-      // Lakukan aksi submit lain, seperti mengirim data ke server
+
+    if (!validateForm()) return;
+    setLoading(true);
+    setResetError("");
+
+    const payload = {
+      newPassword: formValues.password,
+    };
+
+    try {
+      await resetPassword(token, payload);
+      alert("Password reset success");
+    } catch (error) {
+      console.error("Password reset error:", error.message || error);
+      setResetError("Failed to reset password. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="">
-      <form onSubmit={handleSubmit} noValidate>
+    <div className="relative">
+      {loading && (
+        <div className="absolute flex justify-center items-center inset-0 z-50">
+          <img
+            src="/images/loader.gif"
+            alt="loading..."
+            className="w-10 h-10"
+          />
+        </div>
+      )}
+      <form onSubmit={handleSubmit}>
         <InputForm
           name="password"
           text="Password"
@@ -43,24 +96,21 @@ const FormSetNewPassword = () => {
           placeholder="Enter your password"
           value={formValues.password}
           onChange={handleChange}
-          error={error ? " " : ""}
+          error={errors.password}
           autoFocus
         />
         <InputForm
           name="retypePassword"
           text="Retype Password"
           type="password"
-          placeholder="Enter your retype password"
+          placeholder="Retype your password"
           value={formValues.retypePassword}
           onChange={handleChange}
-          error={error}
-          className="mb-4"
+          error={errors.retypePassword}
         />
-        <Button
-          className="w-full bg-[#00a78e] text-white py-2 rounded-lg"
-          type="submit"
-        >
-          Submit
+        {resetError && <p className="text-red-600 text-sm">{resetError}</p>}
+        <Button className="w-full" type="submit" disabled={loading}>
+          {loading ? "Resetting..." : "Submit"}
         </Button>
       </form>
     </div>

@@ -4,15 +4,13 @@ import api from "./axiosInstance";
 // Login function
 export const login = async (data) => {
   try {
-    // Kirim data login ke backend
     const response = await api.post(
       `${import.meta.env.VITE_BASE_AUTH_LOGIN}`,
       data
     );
     if (response.status === 200) {
-      // Jika login berhasil, simpan token ke localStorage
-      const token = response.data.data.accessToken; // Pastikan sesuai dengan struktur response dari backend
-      localStorage.setItem("token", token); // Simpan token ke localStorage
+      const token = response.data.data.accessToken;
+      localStorage.setItem("token", token);
       localStorage.setItem("fullName", response.data.data.fullName);
       localStorage.setItem("role", response.data.data.role);
     } else {
@@ -29,7 +27,6 @@ export const login = async (data) => {
 // Logout function
 export const logout = async (accessToken) => {
   try {
-    // Kirim token logout ke backend
     const response = await api.delete(
       `${import.meta.env.VITE_BASE_AUTH_LOGOUT}`,
       {
@@ -38,6 +35,8 @@ export const logout = async (accessToken) => {
         },
       }
     );
+    localStorage.removeItem("fullName");
+    localStorage.removeItem("role");
     return response.data;
   } catch (error) {
     console.error("Logout failed:", error);
@@ -53,17 +52,21 @@ export const forgetPassword = async (email) => {
       null,
       { params: { email } }
     );
-
-    console.log("Forget Password response:", response);
-    if (response.status === 200) {
-      console.log("Email sent successfully:");
-    } else {
-      console.log("Email sending failed:", response.data);
-    }
-
     return response.data;
   } catch (error) {
-    console.error("Forget Password failed:", error);
+    throw error;
+  }
+};
+
+// Reset password function
+export const resetPassword = async (token, data) => {
+  try {
+    const response = await api.post(
+      `${import.meta.env.VITE_BASE_AUTH_RESET_PASSWORD}?token=${token}`,
+      data
+    );
+    return response.data;
+  } catch (error) {
     throw error;
   }
 };
@@ -72,4 +75,5 @@ export default {
   login,
   logout,
   forgetPassword,
+  resetPassword,
 };

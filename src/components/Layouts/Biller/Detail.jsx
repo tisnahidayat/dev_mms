@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import Header from "../Asset/Header";
 import Breadcumbs from "../Asset/Breadcumbs";
 import SidebarMobile from "../SidebarMobile";
+import { detailBiller } from "../../../services/billerAPI";
 
 const Detail = () => {
   const location = useLocation();
-  const activeItem =
-    location.pathname === "/biller/check-detail" ? "Biller" : "";
   const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [billerData, setBillerData] = useState({});
   const sidebarRef = useRef(null);
+  const { id } = useParams();
+  const activeItem =
+    location.pathname === `/biller/detail/${id}` ? "Biller" : "";
 
+  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       const mobileView = window.innerWidth < 900;
@@ -28,6 +32,7 @@ const Detail = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Handle click outside sidebar
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -50,6 +55,20 @@ const Detail = () => {
     };
   }, [isMobile, isSidebarOpen]);
 
+  useEffect(() => {
+    const fetchBillerDetail = async () => {
+      try {
+        const response = await detailBiller(id);
+        setBillerData(response.data.biller);
+        console.log("Detail Biller Data:", response.data.biller);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchBillerDetail();
+  }, [id]);
+
+  // Function to toggle sidebar
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -79,7 +98,7 @@ const Detail = () => {
         <Breadcumbs
           items={[
             { title: "List Biller", path: "/biller" },
-            { title: "Check Detail", path: "/biller/check-detail" },
+            { title: "Check Detail", path: `/biller/detail/${id}` },
           ]}
         >
           Biller
@@ -97,47 +116,47 @@ const Detail = () => {
                 <tbody>
                   <tr>
                     <td className="font-medium">Biller Name</td>
-                    <td>: 00123</td>
+                    <td>: {billerData.name}</td>
                   </tr>
                   <tr>
                     <td className="font-medium">Type of Business</td>
-                    <td>: BSI University</td>
+                    <td>: {billerData.businessCategory}</td>
                   </tr>
                   <tr>
                     <td className="font-medium">Biller Address</td>
-                    <td>: Jl. Thamrin Pusat, Jakarta Pusat, DKI Jakarta</td>
+                    <td>: {billerData.billerAddress}</td>
                   </tr>
                   <tr>
                     <td className="font-medium">Biller Phone Number</td>
-                    <td>: 081234567891</td>
+                    <td>: {billerData.phone}</td>
                   </tr>
                   <tr>
                     <td className="font-medium">Biller Email</td>
-                    <td>: bsiuniversity@gmail.com</td>
+                    <td>: {billerData.email}</td>
                   </tr>
                   <tr>
                     <td className="font-medium">PIC Name</td>
-                    <td>: John Doe</td>
+                    <td>: {billerData.picName}</td>
                   </tr>
                   <tr>
                     <td className="font-medium">Department</td>
-                    <td>: Kantor Cabang</td>
+                    <td>: </td>
                   </tr>
                   <tr>
                     <td className="font-medium">Transaction Fee</td>
-                    <td>: Rp.2000</td>
+                    <td>: {billerData.transactionFee}</td>
                   </tr>
                   <tr>
                     <td className="font-medium">Transaction Scheme</td>
-                    <td>: Open Payment</td>
+                    <td>: {billerData.transactionScheme}</td>
                   </tr>
                   <tr>
                     <td className="font-medium">Fee Covered By</td>
-                    <td>: Nasabah</td>
+                    <td>: {billerData.feeBurden}</td>
                   </tr>
                   <tr>
                     <td className="font-medium">Settlement Number</td>
-                    <td>: 123456789</td>
+                    <td>: {billerData.settlementAccountNumber}</td>
                   </tr>
                 </tbody>
               </table>
