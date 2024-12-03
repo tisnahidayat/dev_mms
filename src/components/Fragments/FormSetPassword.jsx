@@ -70,7 +70,6 @@ const FormSetNewPassword = () => {
       await resetPassword(token, payload);
       alert("Password reset success");
     } catch (error) {
-      console.error("Password reset error:", error.message || error);
       setResetError("Failed to reset password. Please try again.");
     } finally {
       setLoading(false);

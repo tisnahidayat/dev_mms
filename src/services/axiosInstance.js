@@ -1,10 +1,11 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
 // Membuat instance Axios
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL, // Gunakan URL dasar dari env variables
+  baseURL: import.meta.env.VITE_BASE_URL,
   headers: {
-    "Content-Type": "application/json", // Content type untuk JSON
+    "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
@@ -12,9 +13,9 @@ const api = axios.create({
 // Interceptor untuk menambahkan Authorization header dengan token dari localStorage
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token"); // Ambil token dari localStorage
+    const token = Cookies.get("token"); 
     if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`; // Jika token ada, tambahkan ke header
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
@@ -25,15 +26,15 @@ api.interceptors.request.use(
 
 // Interceptor untuk menangani response dan error global
 api.interceptors.response.use(
-  (response) => response, // Jika response sukses, langsung return response
+  (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 403) {
       // Jika token expired atau tidak valid
       console.error("Token expired or invalid. Redirecting to login...");
-      localStorage.removeItem("token"); // Hapus token jika expired
-      window.location.href = "/login"; // Redirect ke halaman login
+      Cookies.remove("token");
+      window.location.replace("/login");
     }
-    return Promise.reject(error); // Reject error jika status bukan 401
+    return Promise.reject(error);
   }
 );
 

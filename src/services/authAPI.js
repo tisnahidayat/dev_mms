@@ -1,5 +1,5 @@
-import { MdLocalGroceryStore } from "react-icons/md";
 import api from "./axiosInstance";
+import Cookies from "js-cookie";
 
 // Login function
 export const login = async (data) => {
@@ -10,7 +10,7 @@ export const login = async (data) => {
     );
     if (response.status === 200) {
       const token = response.data.data.accessToken;
-      localStorage.setItem("token", token);
+      Cookies.set("token", token);
       localStorage.setItem("fullName", response.data.data.fullName);
       localStorage.setItem("role", response.data.data.role);
     } else {

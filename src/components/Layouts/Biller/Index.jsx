@@ -6,8 +6,8 @@ import Breadcumbs from "../Asset/Breadcumbs";
 import Search from "../../Elements/Search/Search";
 import Dropdown from "../../Elements/Search/Dropdown";
 import SidebarMobile from "../SidebarMobile";
-import { FaPlusCircle } from "react-icons/fa";
-import { fetchBillers, detailBiller } from "../../../services/billerAPI"; // Import fetchBillers
+import { FaPlusCircle, FaRegEdit } from "react-icons/fa";
+import { fetchBillers } from "../../../services/billerAPI"; // Import fetchBillers
 
 const Index = () => {
   const location = useLocation();
@@ -103,8 +103,7 @@ const Index = () => {
         />
         <Breadcumbs
           items={[
-            { title: "List Biller", path: "/biller" },
-            { title: "Create Biller" },
+            { title: "List Biller", path: "/biller" }
           ]}
         >
           Biller
@@ -183,7 +182,7 @@ const Index = () => {
                               : item.submissionStatus === "REVISION"
                               ? "bg-[#F9B300]"
                               : item.submissionStatus === "COMPLETED"
-                              ? "bg-gray-500"
+                              ? "bg-[#22C147]"
                               : "bg-gray-300"
                           }`}
                         >
@@ -196,9 +195,9 @@ const Index = () => {
                       <td className="px-4 py-3">
                         <Link
                           to={`/biller/detail/${item.id}`}
-                          className="text-blue-600 hover:underline"
+                          className="text-blue-600 flex justify-center items-center hover:text-[#00a78e] ease-in-out duration-200"
                         >
-                          Check Detail
+                          Check Detail <FaRegEdit className="ml-1"/>
                         </Link>
                       </td>
                     </tr>

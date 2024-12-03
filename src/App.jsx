@@ -1,7 +1,7 @@
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Index from "./components/Layouts/Biller/Index";
-import Maintenance from "./components/Layouts/Maintenance/Index";
+import Maintenance from "./components/Layouts/Maintenance/index";
 import CreateBiller from "./components/Layouts/Biller/CreateBiller";
 import Detail from "./components/Layouts/Biller/Detail";
 import Login from "./components/Layouts/Auth/Login";

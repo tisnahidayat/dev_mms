@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../services/authAPI";
+import Cookies from "js-cookie";
 
 const menuItems = [
   { icon: FaPlusSquare, label: "Biller", path: "/biller" },
@@ -30,11 +31,11 @@ const Sidebar = forwardRef(
     };
 
     const handleLogout = async () => {
-      const accessToken = localStorage.getItem("token");
+      const accessToken = Cookies.get("token");
 
       try {
         await logout(accessToken);
-        localStorage.removeItem("token");
+        Cookies.remove("token");
       } catch (error) {
         console.error("Logout failed:", error);
       }
