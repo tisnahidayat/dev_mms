@@ -1,6 +1,6 @@
 import { FaAlignLeft } from "react-icons/fa";
 
-const SidebarMobile = ({ onClick }) => {
+const SidebarMobile = ({ onClick, children }) => {
   return (
     <div className="flex items-center w-full border-b-2 shadow-md py-3 mb-5 px-3">
       <FaAlignLeft
@@ -9,7 +9,7 @@ const SidebarMobile = ({ onClick }) => {
         onClick={onClick}
       />
       <div className="flex justify-center w-full">
-        <h1 className="text-center font-semibold text-lg text-[#00a78e]">Biller</h1>
+        <h1 className="text-center font-semibold text-lg text-[#00a78e]">{children}</h1>
       </div>
     </div>
   );

@@ -1,15 +1,25 @@
 import React from "react";
-import LoginPage from "./pages/login";
-import ForgotPasswordPage from "./pages/forgot-password";
-import NewPasswordPage from "./pages/new-password";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import "./App.css";
 import Index from "./components/Layouts/Biller/Index";
 import Maintenance from "./components/Layouts/Maintenance/Index";
+import CreateBiller from "./components/Layouts/Biller/CreateBiller";
+import Detail from "./components/Layouts/Biller/Detail";
+import Login from "./components/Layouts/Auth/Login";
+import ForgotPassword from "./components/Layouts/Auth/ForgotPassword";
+import SetPassword from "./components/Layouts/Auth/SetPassword";
+
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/biller",
     element: <Index />,
+  },
+  {
+    path: "/biller/create",
+    element: <CreateBiller />,
+  },
+  {
+    path: "/biller/detail/:id",
+    element: <Detail />,
   },
   {
     path: "/maintenance",
@@ -17,15 +27,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <LoginPage />,
+    element: <Login />,
   },
   {
     path: "/forgot-password",
-    element: <ForgotPasswordPage />,
+    element: <ForgotPassword />,
   },
   {
     path: "/new-password",
-    element: <NewPasswordPage />,
+    element: <SetPassword />,
   },
 ]);
 function App() {

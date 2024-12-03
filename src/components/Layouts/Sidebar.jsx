@@ -6,36 +6,54 @@ import {
   FaPlusSquare,
   FaClipboardList,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../../services/authAPI";
 
 const menuItems = [
-  { icon: FaPlusSquare, label: "Biller", path: "/" },
+  { icon: FaPlusSquare, label: "Biller", path: "/biller" },
   { icon: FaClipboardList, label: "Maintenance", path: "/maintenance" },
 ];
 
-// Gunakan forwardRef untuk mengakses ref di luar Sidebar
 const Sidebar = forwardRef(
   ({ activeItem, isMobile, isSidebarOpen, toggleSidebar }, ref) => {
     const [open, setOpen] = useState(true);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const handleToggleSidebar = () => {
       if (isMobile) {
-        toggleSidebar(); // Fully hide sidebar on mobile
+        toggleSidebar();
       } else {
-        setOpen(!open); // Toggle between expanded and collapsed on desktop
+        setOpen(!open);
       }
     };
 
-    // Reset `open` pas masuk mobile biar gak ngefek ke w-16 di mobile
+    const handleLogout = async () => {
+      const accessToken = localStorage.getItem("token");
+
+      try {
+        await logout(accessToken);
+        localStorage.removeItem("token");
+      } catch (error) {
+        console.error("Logout failed:", error);
+      }
+
+      if (isMobile) {
+        toggleSidebar(); // Close the sidebar on mobile after logout
+      }
+      navigate("/login"); // Navigate to login page after logout
+    };
+
     useEffect(() => {
       if (isMobile) {
-        setOpen(true); // Biar kalo di mobile langsung lebar penuh kalo dibuka
+        setOpen(true);
       }
     }, [isMobile]);
 
     return (
       <nav
-        ref={ref} // Attach ref to sidebar
+        ref={ref}
         className={`shadow-md h-screen p-2 flex flex-col duration-500 bg-[#00a78e] text-white 
         ${
           isMobile
@@ -45,8 +63,7 @@ const Sidebar = forwardRef(
             : open
             ? "w-60"
             : "w-16"
-        }
-      `}
+        }`}
       >
         <Header
           open={open}
@@ -59,8 +76,9 @@ const Sidebar = forwardRef(
           isMobile={isMobile}
           toggleSidebar={toggleSidebar}
         />
-        <Footer open={open} />
-        <Logout open={open} />
+        <Footer open={open} user={user} />
+        <Logout open={open} onLogout={handleLogout} />{" "}
+        {/* Pass the handleLogout function */}
       </nav>
     );
   }
@@ -90,11 +108,13 @@ const MenuItems = ({ open, activeItem, isMobile, toggleSidebar }) => (
       return (
         <li
           key={index}
-          className={`flex items-center gap-2 p-3 my-2 rounded-md cursor-pointer transition-transform duration-300 ease-in-out transform hover:translate-x-0.5 hover:bg-[#46BCB0] ${
-            isActive ? "bg-[#46BCB0]" : ""
+          className={`flex items-center gap-2 p-3 my-2 rounded-md cursor-pointer transition-transform duration-300 ease-in-out transform ${
+            isActive
+              ? "bg-white text-[#00a78e] transition-colors duration-300 ease-in-out"
+              : "hover:bg-[#46BCB0] hover:translate-x-0.5 transition-colors duration-300 ease-in-out"
           }`}
           onClick={() => {
-            if (isMobile) toggleSidebar(); // Hide sidebar on mobile when item is clicked
+            if (isMobile) toggleSidebar();
           }}
         >
           <Link to={item.path} className="flex items-center w-full">
@@ -125,17 +145,20 @@ const Footer = ({ open }) => (
         !open ? "w-0" : "translate-x-0"
       } duration-500 overflow-hidden text-xs md:text-sm`}
     >
-      <p className="font-semibold">Marketing</p>
-      <span className="font-semibold">John Doe</span>
+      <p className="font-semibold">{localStorage.getItem("fullName")}</p>
+      <span className="font-semibold">
+        {localStorage.getItem("role")?.slice(-5)}
+      </span>
     </div>
   </div>
 );
 
-const Logout = ({ open }) => (
+const Logout = ({ open, onLogout }) => (
   <div
     className={`flex items-center gap-2 px-3 py-2 bg-[#E36F50] rounded-md cursor-pointer hover:bg-[#ea8164] transition-transform duration-300 ease-in-out transform hover:translate-x-0.5 ${
       !open ? "justify-center" : ""
     }`}
+    onClick={onLogout}
   >
     <FaSignOutAlt size={20} className="duration-500" />
     <div
