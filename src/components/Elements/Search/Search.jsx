@@ -1,12 +1,13 @@
+import React from "react";
 import { FaSearch } from "react-icons/fa";
 
-const Search = ({ searchQuery, setSearchQuery }) => {
+const Search = ({ value, onChange }) => {
   return (
     <div className="relative w-full sm:w-[25%]">
       <input
         type="text"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+        value={value}
+        onChange={onChange}
         className="w-full text-sm border p-1 pr-8 pl-3 rounded focus:outline-none focus:ring-1 focus:ring-[#00a78e] border-[#00a78e]"
         placeholder="Search No APPD or Biller Name"
       />

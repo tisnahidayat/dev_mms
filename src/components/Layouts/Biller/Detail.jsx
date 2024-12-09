@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, Link } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import Header from "../Asset/Header";
 import Breadcumbs from "../Asset/Breadcumbs";
 import SidebarMobile from "../SidebarMobile";
-import { detailBiller } from "../../../services/billerAPI";
+import { detailBiller, approveBranch } from "../../../services/billerAPI";
+import { FaDownload } from "react-icons/fa";
 
 const Detail = () => {
   const location = useLocation();
@@ -71,6 +72,17 @@ const Detail = () => {
   // Function to toggle sidebar
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleApprove = async () => {
+    try {
+      const response = await approveBranch(id);
+      console.log("Approval successful:", response.data);
+      alert("Biller approved successfully!");
+    } catch (error) {
+      console.error("Error approving biller:", error);
+      alert("Failed to approve biller.");
+    }
   };
 
   return (
@@ -171,42 +183,21 @@ const Detail = () => {
                 </h2>
                 <table className="w-full">
                   <tbody>
-                    <tr className="border-b">
-                      <td>Upload PKS</td>
-                      <td className="text-red-600">file.pdf</td>
-                      <td>
-                        <a href="#" className="text-blue-600">
-                          Download
-                        </a>
-                      </td>
-                    </tr>
-                    <tr className="border-b">
-                      <td>Upload BPI</td>
-                      <td className="text-red-600">file.pdf</td>
-                      <td>
-                        <a href="#" className="text-blue-600">
-                          Download
-                        </a>
-                      </td>
-                    </tr>
-                    <tr className="border-b">
-                      <td>Upload Surat Cabang</td>
-                      <td className="text-red-600">file.pdf</td>
-                      <td>
-                        <a href="#" className="text-blue-600">
-                          Download
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Bukti Biaya Setup</td>
-                      <td className="text-red-600">file.jpg</td>
-                      <td>
-                        <a href="#" className="text-blue-600">
-                          Download
-                        </a>
-                      </td>
-                    </tr>
+                    {billerData.files &&
+                      billerData.files.map((file, index) => (
+                        <tr key={file.id || index} className="border-b">
+                          <td className="text-red-600">{file.fileName}</td>
+                          <td>
+                            <Link
+                              to={file.fileUrl}
+                              target="_blank"
+                              className="text-blue-500 flex gap-2 items-center hover:text-blue-700"
+                            >
+                              Download <FaDownload />
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -245,7 +236,10 @@ const Detail = () => {
             <button className="px-6 py-2 border border-teal-600 text-teal-600 rounded-lg hover:bg-teal-50">
               Revision
             </button>
-            <button className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700">
+            <button
+              onClick={handleApprove} // Menambahkan event handler untuk approve
+              className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+            >
               Approve
             </button>
           </div>

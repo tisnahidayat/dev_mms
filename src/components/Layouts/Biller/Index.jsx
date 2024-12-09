@@ -15,23 +15,21 @@ const Index = () => {
 
   // State hooks
   const [billersData, setBillersData] = useState([]);
+  const [filteredBillers, setFilteredBillers] = useState([]);
   const [loading, setLoading] = useState(false); // Untuk menangani loading state
-  const [error, setError] = useState(null); // Untuk menangani error
+  const [searchTerm, setSearchTerm] = useState("");
   const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  const [selectedStatus, setSelectedStatus] = useState("");
   const activeItem = location.pathname === "/biller" ? "Biller" : "";
 
-  // Fetching billers data from API
   const loadBillersData = async () => {
     setLoading(true);
-    setError(null);
-
     try {
       const data = await fetchBillers();
       setBillersData(data.data.listBiller);
+      setFilteredBillers(data.data.listBiller);
     } catch (err) {
-      setError("Failed to fetch billers data");
       console.error(err);
     } finally {
       setLoading(false);
@@ -73,6 +71,29 @@ const Index = () => {
     };
   }, [isMobile, isSidebarOpen]);
 
+  // Handle status filter
+  const handleStatusFilter = (status) => {
+    setSelectedStatus(status === "All" ? "" : status); // Kosongkan jika "All" dipilih
+  };
+
+  // Filter billers based on search term and status
+  useEffect(() => {
+    let filtered = billersData.filter(
+      (biller) =>
+        biller.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        biller.appd.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    if (selectedStatus) {
+      filtered = filtered.filter(
+        (biller) =>
+          biller.submissionStatus.toUpperCase() === selectedStatus.toUpperCase()
+      );
+    }
+
+    setFilteredBillers(filtered);
+  }, [searchTerm, billersData, selectedStatus]);
+
   // Toggle sidebar on mobile
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -101,11 +122,7 @@ const Index = () => {
           title="Biller"
           subTitle="View and manage all registered billers."
         />
-        <Breadcumbs
-          items={[
-            { title: "List Biller", path: "/biller" }
-          ]}
-        >
+        <Breadcumbs items={[{ title: "List Biller", path: "/biller" }]}>
           Biller
         </Breadcumbs>
 
@@ -115,7 +132,10 @@ const Index = () => {
             List Biller
           </h1>
           <div className="flex flex-col sm:flex-row gap-3 my-3 w-full">
-            <Search />
+            <Search
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
             <Dropdown
               options={[
                 "Approved",
@@ -124,6 +144,7 @@ const Index = () => {
                 "Revision",
                 "Completed",
               ]}
+              onSelect={handleStatusFilter}
             />
             <Link
               to="/biller/create"
@@ -139,9 +160,7 @@ const Index = () => {
           <div className="overflow-x-auto">
             {loading ? (
               <div className="text-center text-gray-500">Loading...</div>
-            ) : error ? (
-              <div className="text-center text-red-500">{error}</div>
-            ) : billersData.length > 0 ? (
+            ) : (
               <table className="min-w-full text-sm text-left text-gray-500">
                 <thead className="text-xs text-center text-white uppercase bg-[#00a78e] border-b border-gray-300">
                   <tr>
@@ -157,57 +176,61 @@ const Index = () => {
                   </tr>
                 </thead>
                 <tbody className="text-center">
-                  {billersData.map((item, index) => (
-                    <tr
-                      key={index}
-                      className="bg-white border-b hover:bg-gray-50"
-                    >
-                      <td className="px-4 py-3">{index + 1}</td>
-                      <td className="px-4 py-3">{item.appd}</td>
-                      <td className="px-4 py-3 hidden md:table-cell">
-                        {item.name}
-                      </td>
-                      <td className="px-4 py-3 hidden lg:table-cell">
-                        {item.picName}
-                      </td>
-                      <td className="flex px-4 py-3 items-center justify-center">
-                        <span
-                          className={`py-1 w-[70%] text-center text-xs rounded-lg text-white capitalize ${
-                            item.submissionStatus === "APPROVED"
-                              ? "bg-[#18908E]"
-                              : item.submissionStatus === "PROPOSED"
-                              ? "bg-[#106EF2]"
-                              : item.submissionStatus === "REJECTED"
-                              ? "bg-[#D1351D]"
-                              : item.submissionStatus === "REVISION"
-                              ? "bg-[#F9B300]"
-                              : item.submissionStatus === "COMPLETED"
-                              ? "bg-[#22C147]"
-                              : "bg-gray-300"
-                          }`}
-                        >
-                          {item.submissionStatus.toLowerCase()}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 hidden lg:table-cell">
-                        {item.createdBy}
-                      </td>
-                      <td className="px-4 py-3">
-                        <Link
-                          to={`/biller/detail/${item.id}`}
-                          className="text-blue-600 flex justify-center items-center hover:text-[#00a78e] ease-in-out duration-200"
-                        >
-                          Check Detail <FaRegEdit className="ml-1"/>
-                        </Link>
+                  {filteredBillers.length > 0 ? (
+                    filteredBillers.map((item, index) => (
+                      <tr
+                        key={index}
+                        className="bg-white border-b hover:bg-gray-50"
+                      >
+                        <td className="px-4 py-3">{index + 1}</td>
+                        <td className="px-4 py-3">{item.appd}</td>
+                        <td className="px-4 py-3 hidden md:table-cell">
+                          {item.name}
+                        </td>
+                        <td className="px-4 py-3 hidden lg:table-cell">
+                          {item.picName}
+                        </td>
+                        <td className="flex px-4 py-3 items-center justify-center">
+                          <span
+                            className={`py-1 w-[70%] text-center text-xs rounded-lg text-white capitalize ${
+                              item.submissionStatus === "APPROVED"
+                                ? "bg-[#18908E]"
+                                : item.submissionStatus === "PROPOSED"
+                                ? "bg-[#106EF2]"
+                                : item.submissionStatus === "REJECTED"
+                                ? "bg-[#D1351D]"
+                                : item.submissionStatus === "REVISION"
+                                ? "bg-[#F9B300]"
+                                : item.submissionStatus === "COMPLETED"
+                                ? "bg-[#22C147]"
+                                : "bg-gray-300"
+                            }`}
+                          >
+                            {item.submissionStatus.toLowerCase()}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 hidden lg:table-cell">
+                          {item.createdBy}
+                        </td>
+                        <td className="px-4 py-3">
+                          <Link
+                            to={`/biller/detail/${item.id}`}
+                            className="text-blue-600 flex justify-center items-center hover:text-[#00a78e] ease-in-out duration-200"
+                          >
+                            Check Detail <FaRegEdit className="ml-1" />
+                          </Link>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="7" className="py-4 text-gray-500">
+                        Data Not Available
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
-            ) : (
-              <div className="text-center text-gray-500">
-                Data Not Available
-              </div>
             )}
           </div>
         </div>

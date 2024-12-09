@@ -19,7 +19,6 @@ const Sidebar = forwardRef(
   ({ activeItem, isMobile, isSidebarOpen, toggleSidebar }, ref) => {
     const [open, setOpen] = useState(true);
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     const handleToggleSidebar = () => {

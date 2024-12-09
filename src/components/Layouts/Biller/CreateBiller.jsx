@@ -5,6 +5,8 @@ import Header from "../Asset/Header";
 import Breadcumbs from "../Asset/Breadcumbs";
 import SidebarMobile from "../SidebarMobile";
 import FormBiller from "../../Fragments/FormBiller";
+import { createBiller } from "../../../services/billerAPI";
+
 const CreateBiller = () => {
   const location = useLocation();
   const activeItem = location.pathname === "/biller/create" ? "Biller" : "";
@@ -35,11 +37,11 @@ const CreateBiller = () => {
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 900);
-      setIsSidebarOpen(!isMobile);
     };
     window.addEventListener("resize", handleResize);
+    handleResize(); // Initialize state on mount
     return () => window.removeEventListener("resize", handleResize);
-  }, [isMobile]);
+  }, []);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -52,21 +54,11 @@ const CreateBiller = () => {
       },
     }));
 
-    // Reset error jika ada file yang dipilih
+    // Reset error if a file is selected
     setErrors((prevErrors) => ({
       ...prevErrors,
       [id]: "",
     }));
-  };
-
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    const newErrors = validateForm();
-    setErrors(newErrors);
-
-    if (Object.keys(newErrors).length === 0) {
-      console.log("Form Data Submitted:", formData);
-    }
   };
 
   const handleInputChange = (name, value) => {
@@ -85,7 +77,6 @@ const CreateBiller = () => {
     if (!formData.billerAddress)
       newErrors.billerAddress = "Biller address is required.";
     if (!formData.billerEmail)
-      // Pastikan key sesuai dengan formData
       newErrors.billerEmail = "Biller email is required.";
     if (!formData.billerPhoneNumber)
       newErrors.billerPhoneNumber = "Biller phone number is required.";
@@ -100,7 +91,7 @@ const CreateBiller = () => {
     if (!formData.settlementAccountNumber)
       newErrors.settlementAccountNumber =
         "Settlement account number is required.";
-    // Validasi untuk setiap dokumen pendukung
+    // Validation for supporting documents
     if (!formData.supportingDocuments.pks)
       newErrors.pks = "PKS document is required.";
     if (!formData.supportingDocuments.bpi)
@@ -111,6 +102,41 @@ const CreateBiller = () => {
       newErrors.buktiBiayaSetup = "Bukti Biaya Setup is required.";
 
     return newErrors;
+  };
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    const newErrors = validateForm();
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      try {
+        const response = await createBiller(formData);
+        console.log("Biller created:", response);
+        // Optionally, clear the form or redirect the user here
+        setFormData({
+          billerName: "",
+          typeOfBusiness: "",
+          billerAddress: "",
+          billerEmail: "",
+          billerPhoneNumber: "",
+          picName: "",
+          department: "",
+          transactionFee: "",
+          transactionScheme: "",
+          feesCoveredBy: "",
+          settlementAccountNumber: "",
+          supportingDocuments: {
+            pks: null,
+            bpi: null,
+            suratCabang: null,
+            buktiBiayaSetup: null,
+          },
+        });
+      } catch (error) {
+        console.error("Error during biller creation:", error);
+      }
+    }
   };
 
   return (

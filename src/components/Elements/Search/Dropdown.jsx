@@ -11,7 +11,7 @@ const Dropdown = ({ options, onSelect }) => {
   };
 
   const handleSelect = (value) => {
-    setSelectedValue(value === "All" ? "" : value); // Set ke '' untuk "Sort Status"
+    setSelectedValue(value === "All" ? "" : value);
     onSelect(value);
     setIsOpen(false);
   };
@@ -29,12 +29,10 @@ const Dropdown = ({ options, onSelect }) => {
     };
   }, []);
 
-  // Tambahkan "All" di options
   const optionsWithAll = ["All", ...options];
 
   return (
     <div ref={dropdownRef} className="relative w-full sm:w-[30%]">
-      {/* Trigger Dropdown */}
       <div
         onClick={handleToggle}
         className={`w-full text-sm border p-1 pr-8 pl-3 cursor-pointer bg-white ${
@@ -54,7 +52,6 @@ const Dropdown = ({ options, onSelect }) => {
         </span>
       </div>
 
-      {/* Options List */}
       {isOpen && (
         <ul className="absolute w-full bg-white border border-[#00a78e] mt-1 z-10 rounded-md overflow-hidden">
           {optionsWithAll.map((option, index) => (
